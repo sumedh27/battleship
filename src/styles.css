@@ -1,0 +1,248 @@
+:root {
+    --primary-50: hsl(245, 75%, 97%);
+    --primary-100: hsl(243, 76%, 90%);
+    --primary-200: hsl(244, 75%, 86%);
+    --primary-300: hsl(244, 76%, 79%);
+    --primary-400: hsl(244, 75%, 75%);
+    --primary-500: hsl(244, 75%, 69%);
+    --primary-600: hsl(244, 57%, 63%);
+    --primary-700: hsl(244, 34%, 49%);
+    --primary-800: hsl(245, 34%, 38%);
+    --primary-900: hsl(245, 35%, 29%);
+    --secondary-50: hsl(0, 20%, 99%);
+    --secondary-100: hsl(0, 13%, 97%);
+    --secondary-200: hsl(0, 13%, 95%);
+    --secondary-300: hsl(0, 12%, 93%);
+    --secondary-400: hsl(0, 10%, 92%);
+    --secondary-500: hsl(0, 12%, 90%);
+    --secondary-600: hsl(0, 5%, 82%);
+    --secondary-700: hsl(0, 2%, 64%);
+    --secondary-800: hsl(0, 1%, 50%);
+    --secondary-900: hsl(0, 2%, 38%);
+    --error-50: hsl(0, 100%, 95%);
+    --error-100: hsl(0, 100%, 85%);
+    --error-200: hsl(0, 100%, 77%);
+    --error-300: hsl(0, 100%, 66%);
+    --error-400: hsl(0, 100%, 60%);
+    --error-500: hsl(0, 100%, 50%);
+    --error-600: hsl(0, 100%, 45%);
+    --error-700: hsl(0, 100%, 35%);
+    --error-800: hsl(0, 100%, 27%);
+    --error-900: hsl(0, 100%, 21%);
+    --success-50: hsl(144, 67%, 94%);
+    --success-100: hsl(145, 65%, 81%);
+    --success-200: hsl(145, 65%, 72%);
+    --success-300: hsl(145, 64%, 59%);
+    --success-400: hsl(145, 65%, 51%);
+    --success-500: hsl(145, 100%, 39%);
+    --success-600: hsl(145, 100%, 36%);
+    --success-700: hsl(145, 100%, 28%);
+    --success-800: hsl(145, 100%, 22%);
+    --success-900: hsl(145, 100%, 16%);
+}
+
+body {
+    background-color: #1b1c22;
+    color: var(--secondary-500);
+    font-family:
+        'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans',
+        Arial, sans-serif;
+    margin: 0;
+    min-height: 100dvh;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+header h1 {
+    font-size: 3.5rem;
+    color: var(--primary-500);
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-family: inherit;
+    font-weight: bolder;
+    letter-spacing: 0.3ch;
+    background: linear-gradient(
+        to right,
+        var(--primary-500) 0%,
+        var(--primary-600) 50%,
+        var(--primary-700) 100%
+    );
+    color: var(--secondary-50);
+    border-radius: 12px;
+    box-shadow: 2px 2px 5px var(--primary-700);
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    &:active {
+        background: linear-gradient(
+            to left,
+            var(--primary-500) 0%,
+            var(--primary-600) 50%,
+            var(--primary-700) 100%
+        );
+    }
+}
+
+.spawn-btn {
+    padding: 0.25rem;
+}
+
+.random-section button {
+    padding: 0.5rem;
+    margin-right: 1rem;
+}
+
+input[type='number'] {
+    background-color: var(--primary-200);
+}
+
+.player-choice {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    grid-template-rows: 1fr 3fr 1fr 1fr;
+    gap: 20px;
+    padding: 3.5rem;
+}
+
+.game-start {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr;
+    gap: 10px;
+    padding: 3.5rem;
+    justify-items: center;
+}
+
+.player-board {
+    max-width: 100%;
+    grid-column: 1 / 2;
+    grid-row: 1/ 6;
+    display: flex;
+    justify-content: center;
+}
+
+.player-board-game {
+    grid-column: 1 / 2;
+    grid-row: 1/2;
+}
+
+.computer-board-game {
+    grid-column: 3 / 4;
+    grid-row: 1/2;
+}
+
+.turn-indicator {
+    grid-column: 2/3;
+    grid-row: 1/2;
+    color: var(--primary-100);
+    align-self: center;
+}
+
+.restart-btn {
+    position: absolute;
+    right: 2.5rem;
+    top: 3rem;
+    padding: 1rem;
+}
+
+.player-board-container,
+.comp-board-container {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    border: solid 5px var(--primary-700);
+    width: 400px;
+    height: 400px;
+}
+
+.cell {
+    border: solid 1.5px var(--primary-900);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cell.ship {
+    background-color: var(--primary-800);
+}
+
+.cell.hit {
+    border: none;
+    color: var(--primary-700);
+    background-color: var(--success-900);
+}
+
+#computer-cell:not(.cell.hit):not(.cell.miss):not(.cell.lost):hover {
+    background-color: var(--primary-800);
+}
+
+.user-inputs {
+    grid-column: 2 / 3;
+    grid-row: 2/3;
+}
+
+.random-section {
+    grid-column: 2/3;
+    grid-row: 3/4;
+    display: flex;
+    align-items: center;
+}
+
+#ship-sizes {
+    background-color: var(--primary-200);
+}
+
+#start-game {
+    grid-column: 2/3;
+    grid-row: 4/5;
+    max-height: 3rem;
+    max-width: 8rem;
+}
+
+#spawn-ship {
+    display: grid;
+    grid-template-columns: 15ch 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 1ch;
+}
+
+select,
+input[type='number'] {
+    max-width: 5ch;
+    border-radius: 4px;
+}
+
+.win-modal {
+    background-color: #1b1c22;
+    color: var(--primary-500);
+    min-width: 300px;
+    min-height: 100px;
+    text-align: center;
+    border: solid 1px var(--primary-500);
+    &::backdrop {
+        background: rgb(0 0 0 / 0.4);
+    }
+}
+
+.win-modal h1 {
+    font-family: inherit;
+}
+
+.close-modal-btn {
+    position: absolute;
+    right: 1rem;
+    top: 0.5rem;
+}
+
+footer {
+    color: var(--primary-500);
+}
