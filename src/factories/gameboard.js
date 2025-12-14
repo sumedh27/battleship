@@ -118,7 +118,11 @@ export default function Gameboard() {
             if (board[row][col].getHealth() === 1) {
                 const coordinates = board[row][col].getCoords().coords;
                 const axis = board[row][col].getCoords().axis;
-                destroyAdjacentBoxes(coordinates, axis, board[row][col]);
+                result.adjacentCoords = destroyAdjacentBoxes(
+                    coordinates,
+                    axis,
+                    board[row][col]
+                );
             }
 
             board[row][col].hit();
@@ -212,6 +216,7 @@ export default function Gameboard() {
                 }
             }
         }
+        return true;
     }
 
     function randomize(shipsToSpawn) {

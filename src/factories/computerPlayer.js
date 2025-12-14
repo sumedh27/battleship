@@ -1,3 +1,4 @@
+import { transform } from '@babel/core';
 import Gameboard from './gameboard';
 import { getRandomCoords } from './utils/getRandomCoords';
 
@@ -8,6 +9,25 @@ export default function computerPlayer() {
 
     let shipFound = new Map();
     let prevAttack = { coords: null, hit: null };
+
+    const directions = {
+        up: {
+            transformCoords: (coords) => [coords[0] - 1, [coords[1]]],
+            oppositeDir: 'down',
+        },
+        right: {
+            transformCoords: (coords) => [coords[0], coords[1] + 1],
+            oppositeDir: 'left',
+        },
+        down: {
+            transformCoords: (coords) => [coords[0] + 1, coords[1]],
+            oppositeDir: 'up',
+        },
+        left: {
+            transformCoords: (coords) => [coords[0], coords[1] - 1],
+            oppositeDir: 'right',
+        },
+    };
 
     const attack = (enemyBoard) => {
         const coords = getRandomBox(enemyBoard);
