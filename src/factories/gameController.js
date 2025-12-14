@@ -28,9 +28,9 @@ export default function GameController(ships) {
     function handleAttack(player, enemy, coords) {
         let hit;
         if (coords) {
-            hit = player.attack(enemy.gameboard, coords);
+            hit = player.attack(enemy.gameboard, coords).shipHit;
         } else {
-            hit = player.attack(enemy.gameboard);
+            hit = player.attack(enemy.gameboard).shipHit;
         }
 
         const win = enemy.gameboard.allShipsSunk();

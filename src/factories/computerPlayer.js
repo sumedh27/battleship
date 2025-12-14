@@ -10,6 +10,19 @@ export default function computerPlayer() {
     let prevAttack = { coords: null, hit: null };
 
     const attack = (enemyBoard) => {
+        const coords = getRandomBox(enemyBoard);
+
+        const attackResponse = enemyBoard.receiveAttack(coords);
+
+        prevAttack.coords = attackResponse.attackedCoord;
+        prevAttack.hit = attackResponse.shipHit;
+
+        console.log(prevAttack);
+
+        return attackResponse;
+    };
+
+    function getRandomBox(enemyBoard) {
         let coords;
         let emptyBox = false;
         while (!emptyBox) {
@@ -22,15 +35,8 @@ export default function computerPlayer() {
                 emptyBox = true;
             }
         }
-
-        prevAttack.coords = coords;
-        
-        const attackResponse = enemyBoard.receiveAttack(coords);
-
-        console.log(attackResponse);
-
-        return attackResponse;
-    };
+        return coords;
+    }
 
     return { name, gameboard, board, attack };
 }

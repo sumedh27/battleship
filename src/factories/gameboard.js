@@ -107,7 +107,10 @@ export default function Gameboard() {
 
     function receiveAttack(coords) {
         const [row, col] = coords;
+
         if (row >= board.length || col >= board.length) return;
+
+        let result = { shipHit: null };
 
         if (typeof board[row][col] === 'object') {
             if (board[row][col].isSunk()) return;
@@ -119,12 +122,19 @@ export default function Gameboard() {
             }
 
             board[row][col].hit();
+
+            result.attackedCoord = [row, col];
+            result.ship = board[row][col];
+            result.shipHit = true;
+
             board[row][col] = ATTACK_HIT;
 
-            return true;
+            return result;
         } else {
             board[row][col] = ATTACK_MISS;
-            return false;
+            result.attackedCoord = [row, col];
+            result.shipHit = false;
+            return result;
         }
     }
 

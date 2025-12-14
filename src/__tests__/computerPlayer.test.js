@@ -59,10 +59,12 @@ describe('computer player tests', () => {
     test.only('computer ai tests', () => {
         const getRandom = jest
             .spyOn(randomCoords, 'getRandomCoords')
-            .mockReturnValueOnce([1, 1]);
+            .mockReturnValueOnce([1, 1])
+            .mockReturnValueOnce([0, 1]);
 
         eGameboard.spawnShipAt([1, 1], ship);
 
+        computer.attack(eGameboard);
         computer.attack(eGameboard);
 
         console.log(eBoard);
