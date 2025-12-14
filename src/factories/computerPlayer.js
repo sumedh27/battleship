@@ -6,9 +6,6 @@ export default function computerPlayer() {
     const gameboard = Gameboard();
     const board = gameboard.getBoard();
 
-    let shipFound = new Map();
-    let prevAttack = { coords: null, hit: null };
-
     const attack = (enemyBoard) => {
         let coords;
         let emptyBox = false;
@@ -23,11 +20,8 @@ export default function computerPlayer() {
             }
         }
 
-        prevAttack.coords = coords;
-        
         const attackResponse = enemyBoard.receiveAttack(coords);
 
-        console.log(attackResponse);
 
         return attackResponse;
     };
