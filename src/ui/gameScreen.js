@@ -65,7 +65,7 @@ export default function gameScreen(game, player, computer) {
             );
             setTimeout(() => {
                 handleComputerMove();
-            }, 1);
+            }, 700);
         }
     }
 
