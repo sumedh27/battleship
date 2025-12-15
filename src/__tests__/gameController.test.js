@@ -1,5 +1,13 @@
 import GameController from '../factories/gameController';
-import { beforeEach, describe, expect, jest, test } from '@jest/globals';
+import {
+    afterAll,
+    afterEach,
+    beforeEach,
+    describe,
+    expect,
+    jest,
+    test,
+} from '@jest/globals';
 import * as randomCoords from '../factories/utils/getRandomCoords';
 import Ship from '../factories/ship';
 import realPlayer from '../factories/realPlayer';
@@ -31,8 +39,12 @@ describe('Game Controller tests', () => {
             players[0] = real;
             players[1] = comp;
         });
+
         game.init();
-        jest.clearAllMocks();
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
     });
 
     describe('init controller', () => {
@@ -58,6 +70,10 @@ describe('Game Controller tests', () => {
     });
 
     describe('handle attacks', () => {
+        afterEach(() => {
+            jest.restoreAllMocks();
+        });
+
         test('handle real player attacks and win on all computer ships sunk', () => {
             let currentTurn;
             expect(typeof players[0].board[1][1] === 'object').toBeTruthy();
@@ -94,11 +110,8 @@ describe('Game Controller tests', () => {
 
         test('computer player attacks on its turn', () => {
             const getRandom = jest
-                .spyOn(randomCoords, 'getRandomCoords')
-                .mockReturnValueOnce([1, 1])
-                .mockReturnValueOnce([0, 0]);
-
-            expect(game.getPlayerTurn()).toMatchObject(players[0]);
+                .spyOn(players[1], 'findMoves')
+                .mockReturnValueOnce([[1, 1]]);
 
             // Real Player hits enemy board at [0,0]
             let currentTurn = game.playTurn([0, 0]);
@@ -111,31 +124,30 @@ describe('Game Controller tests', () => {
             // Computer Player hits enemy board at [1,1]
 
             currentTurn = game.playTurn();
+            console.log(getRandom.mock.results);
+
+            console.log(currentTurn);
 
             expect(currentTurn.hit).toBeTruthy();
             expect(players[0].board[1][1]).toStrictEqual('X');
             expect(game.getPlayerTurn()).toMatchObject(players[1]);
 
-            // Computer Player hits enemy board at [0,0]
+            // Computer Player hits enemy board at [0,1]
 
             currentTurn = game.playTurn();
+            console.log(currentTurn);
             expect(currentTurn.hit).toBeFalsy();
-            expect(players[0].board[0][0]).toStrictEqual('-');
+            expect(players[0].board[0][1]).toStrictEqual('-');
 
             expect(game.getPlayerTurn()).toMatchObject(players[0]);
-
-            expect(getRandom).toHaveBeenCalledTimes(2);
         });
     });
 
     describe('simulate a game where real player wins', () => {
         test('simulation', () => {
             const getRandom = jest
-                .spyOn(randomCoords, 'getRandomCoords')
-                .mockReturnValueOnce([1, 1])
-                .mockReturnValueOnce([3, 4])
-                .mockReturnValueOnce([2, 4])
-                .mockReturnValueOnce([1, 6]);
+                .spyOn(players[1], 'findMoves')
+                .mockReturnValueOnce([[1, 1]]);
 
             expect(typeof players[0].board[1][1] === 'object').toBeTruthy();
             expect(typeof players[1].board[1][1] === 'object').toBeTruthy();
@@ -161,50 +173,42 @@ describe('Game Controller tests', () => {
             expect(players[0].board[1][1]).toStrictEqual('X');
             expect(game.getPlayerTurn()).toMatchObject(players[1]);
 
-            // Computer Player attacks Player Board at [3,4]
+            // Computer Player attacks Player Board at [0,1]
             currentTurn = game.playTurn();
 
             expect(currentTurn.hit).toBeFalsy();
-            expect(players[0].board[3][4]).toStrictEqual('-');
+            expect(players[0].board[0][1]).toStrictEqual('-');
             expect(game.getPlayerTurn()).toMatchObject(players[0]);
 
-            // Real Player attacks Computer Board at [4,2]
+            // // Real Player attacks Computer Board at [4,2]
             currentTurn = game.playTurn([4, 2]);
 
             expect(currentTurn.hit).toBeFalsy();
             expect(players[1].board[4][2]).toStrictEqual('-');
             expect(game.getPlayerTurn()).toMatchObject(players[1]);
 
-            // Computer Player attacks Player Board at [1,1]
+            // Computer Player attacks Player Board at [1,0]
             currentTurn = game.playTurn();
 
             expect(currentTurn.hit).toBeFalsy();
-            expect(players[0].board[2][4]).toStrictEqual('-');
+            expect(players[0].board[1][0]).toStrictEqual('-');
             expect(game.getPlayerTurn()).toMatchObject(players[0]);
 
-            // Real Player attacks Computer Board at [4,2]
-            currentTurn = game.playTurn([3, 1]);
+            // Real Player attacks Computer Board at [6,2]
+            currentTurn = game.playTurn([6, 2]);
 
             expect(currentTurn.hit).toBeFalsy();
-            expect(players[1].board[3][1]).toStrictEqual('-');
+            expect(players[1].board[6][2]).toStrictEqual('-');
             expect(game.getPlayerTurn()).toMatchObject(players[1]);
 
-            // Computer Player attacks Player Board at [1,1]
+            // Computer Player attacks Player Board at [1,2] and wins the game
             currentTurn = game.playTurn();
 
-            expect(currentTurn.hit).toBeFalsy();
-            expect(players[0].board[1][6]).toStrictEqual('-');
-            expect(game.getPlayerTurn()).toMatchObject(players[0]);
-
-            // Real Player attacks Computer Board at [1,2] and wins the game
-
-            currentTurn = game.playTurn([1, 2]);
-
+            console.log(currentTurn);
             expect(currentTurn.hit).toBeTruthy();
-            expect(players[1].board[1][2]).toStrictEqual('X');
+            expect(players[0].board[1][2]).toStrictEqual('X');
+            expect(game.getPlayerTurn()).toMatchObject(players[1]);
             expect(currentTurn.win).toBeTruthy();
-
-            expect(getRandom).toHaveBeenCalledTimes(4);
         });
     });
 });

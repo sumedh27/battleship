@@ -32,7 +32,9 @@ describe('computer player tests', () => {
     test('attack an enemy ship', () => {
         enemy.gameboard.spawnShipAt([1, 1], ship);
 
-        jest.spyOn(randomCoords, 'getRandomCoords').mockReturnValueOnce([1, 1]);
+        const getRandom = jest
+            .spyOn(computer, 'findMoves')
+            .mockReturnValueOnce([[1, 1]]);
 
         computer.attack(enemy.gameboard);
 
@@ -43,28 +45,13 @@ describe('computer player tests', () => {
         enemy.gameboard.spawnShipAt([1, 1], ship);
 
         const getRandom = jest
-            .spyOn(randomCoords, 'getRandomCoords')
-            .mockReturnValueOnce([1, 1])
-            .mockReturnValueOnce([1, 1])
-            .mockReturnValueOnce([1, 2]);
+            .spyOn(computer, 'findMoves')
+            .mockReturnValueOnce([[1, 1]]);
 
         computer.attack(enemy.gameboard);
         computer.attack(enemy.gameboard);
 
-        expect(getRandom).toHaveBeenCalledTimes(3);
         expect(enemy.board[1][1]).toStrictEqual('X');
-        expect(enemy.board[1][2]).toStrictEqual('X');
-    });
-
-    test.only('computer ai tests', () => {
-        const getRandom = jest
-            .spyOn(randomCoords, 'getRandomCoords')
-            .mockReturnValueOnce([1, 1]);
-
-        eGameboard.spawnShipAt([1, 1], ship);
-
-        computer.attack(eGameboard);
-
-        console.log(eBoard);
+        expect(enemy.board[0][1]).toStrictEqual('-');
     });
 });
