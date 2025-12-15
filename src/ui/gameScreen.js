@@ -43,7 +43,7 @@ export default function gameScreen(game, player, computer) {
     const boardComp = compBoard.getBoard();
 
     spawnShips(playerCells, boardPlayer);
-    spawnShips(compCells, boardComp);
+    spawnShips(compCells, boardComp, true);
 
     function handleTurn(player, comp) {
         let currentTurn = game.getPlayerTurn();
@@ -65,7 +65,7 @@ export default function gameScreen(game, player, computer) {
             );
             setTimeout(() => {
                 handleComputerMove();
-            }, 700);
+            }, 1);
         }
     }
 
@@ -76,7 +76,7 @@ export default function gameScreen(game, player, computer) {
 
         const turn = game.playTurn([row, col]);
         spawnShips(playerCells, boardPlayer);
-        spawnShips(compCells, boardComp);
+        spawnShips(compCells, boardComp, true);
 
         if (turn.win === true) return handlePlayerWin();
 
@@ -87,7 +87,7 @@ export default function gameScreen(game, player, computer) {
         const turn = game.playTurn();
 
         spawnShips(playerCells, boardPlayer);
-        spawnShips(compCells, boardComp);
+        spawnShips(compCells, boardComp, true);
 
         if (turn.win === true) return handleComputerWin();
 
@@ -106,12 +106,17 @@ export default function gameScreen(game, player, computer) {
     }
 
     function createWinModal(player) {
+        let winMsg =
+            player === 'player'
+                ? 'You Won!'
+                : player === 'computer'
+                  ? 'You Lost!'
+                  : 'Error';
+
         const body = document.querySelector('body');
         const winDialog = document.createElement('dialog');
         winDialog.classList.add('win-modal');
         body.appendChild(winDialog);
-
-        const winMsg = player === 'player' ? 'You Won!' : 'You Lost!';
         const winText = document.createElement('h1');
         winText.textContent = winMsg;
         winDialog.appendChild(winText);
@@ -120,6 +125,14 @@ export default function gameScreen(game, player, computer) {
         closeBtn.classList.add('close-modal-btn');
         closeBtn.textContent = 'X';
         winDialog.appendChild(closeBtn);
+    }
+
+    function deleteWinModal() {
+        const winDialog = document.querySelector('dialog');
+
+        if (winDialog) {
+            winDialog.parentNode.removeChild(winDialog);
+        }
     }
 
     function showWinModal() {
@@ -135,6 +148,7 @@ export default function gameScreen(game, player, computer) {
             () => {
                 resetGame();
                 winDialog.close();
+                deleteWinModal();
             },
             { once: true }
         );
@@ -145,6 +159,7 @@ export default function gameScreen(game, player, computer) {
                 if (e.key === 'Escape') {
                     resetGame();
                     winDialog.close();
+                    deleteWinModal();
                 }
             },
             { once: true }
