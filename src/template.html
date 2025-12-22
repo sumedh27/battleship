@@ -3,9 +3,58 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            #loader {
+                position: fixed;
+                inset: 0;
+                background-color: #1b1c22;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 100;
+            }
+
+            .spinner {
+                position: relative;
+                width: 100px;
+                height: 100px;
+            }
+
+            .spinner:before,
+            .spinner:after {
+                content: '';
+                border-radius: 50%;
+                position: absolute;
+                inset: 0;
+                box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3) inset;
+            }
+            .spinner:after {
+                box-shadow: 0 2px 0 hsl(244, 75%, 69%) inset;
+                animation: rotate 2s linear infinite;
+            }
+
+            @keyframes rotate {
+                0% {
+                    transform: rotate(0);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            #loader.fade-out {
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                pointer-events: none;
+            }
+        </style>
         <title>Battleship</title>
     </head>
     <body>
+        <div id="loader">
+            <div class="spinner"></div>
+        </div>
+
         <header>
             <h1>Battleship Game</h1>
         </header>
