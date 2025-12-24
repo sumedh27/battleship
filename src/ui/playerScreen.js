@@ -11,7 +11,6 @@ export default function playerScreen(game, player, computer, ships) {
     main.className = 'player-choice';
 
     const boardSection = document.createElement('section');
-    const userInputSection = document.createElement('section');
 
     main.appendChild(boardSection);
     boardSection.classList.add('player-board'); // check this
@@ -21,16 +20,21 @@ export default function playerScreen(game, player, computer, ships) {
     boardSection.appendChild(boardContainer);
     boardContainer.classList.add('player-board-container');
 
-    const gameInfoSection = document.createElement('section');
+    const playerSelectSection = document.createElement('section');
+    playerSelectSection.classList.add('player-select');
+    main.appendChild(playerSelectSection);
+
+    const gameInfoSection = document.createElement('div');
     gameInfoSection.classList.add('game-info-text');
-    main.appendChild(gameInfoSection);
+    playerSelectSection.appendChild(gameInfoSection);
 
     const gameInfo = document.createElement('p');
     gameInfo.textContent =
         'Play Battleship, a type guessing strategy game against a computer player';
     gameInfoSection.appendChild(gameInfo);
 
-    main.appendChild(userInputSection);
+    const userInputSection = document.createElement('div');
+    playerSelectSection.appendChild(userInputSection);
     userInputSection.classList.add('user-inputs');
 
     function createSpawnShips() {
@@ -146,9 +150,9 @@ export default function playerScreen(game, player, computer, ships) {
     // spawnBtn.textContent = 'Spawn';
     // spawnFormEl.appendChild(spawnBtn);
 
-    const randomSection = document.createElement('section');
+    const randomSection = document.createElement('div');
     randomSection.classList.add('random-section');
-    main.appendChild(randomSection);
+    playerSelectSection.appendChild(randomSection);
 
     const randomizeBtn = document.createElement('button');
     randomizeBtn.classList.add('randomize-btn');
@@ -165,7 +169,7 @@ export default function playerScreen(game, player, computer, ships) {
     const startGameBtn = document.createElement('button');
     startGameBtn.textContent = 'Start Game';
     startGameBtn.id = 'start-game';
-    main.appendChild(startGameBtn);
+    playerSelectSection.appendChild(startGameBtn);
     // const resetBtn = document.querySelector('.reset-btn');
     // const randomizeBtn = document.querySelector('.randomize-btn');
 

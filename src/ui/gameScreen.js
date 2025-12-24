@@ -177,13 +177,15 @@ export default function gameScreen(game, player, computer) {
         modalEventListeners();
     }
 
+    const header = document.querySelector('header');
     const restartGame = document.createElement('button');
     restartGame.classList.add('restart-btn');
-    main.appendChild(restartGame);
+    header.appendChild(restartGame);
     restartGame.textContent = 'Restart Game';
 
     function resetGame() {
         game.reset();
+        restartGame.remove();
         const ships = [5, 4, 3, 2, 2];
         playerScreen(game, player, computer, ships);
     }
