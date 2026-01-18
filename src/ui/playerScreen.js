@@ -38,117 +38,90 @@ export default function playerScreen(game, player, computer, ships) {
     userInputSection.classList.add('user-inputs');
 
     function createSpawnShips() {
-        const formText = document.createElement('p');
-        userInputSection.appendChild(formText);
-        formText.textContent = 'Select Ship and spawn it at';
+        let vertical = true;
 
-        const spawnFormEl = document.createElement('form');
+        const divTitle = document.createElement('div');
+        userInputSection.appendChild(divTitle);
+        divTitle.classList.add('user-title');
 
-        userInputSection.appendChild(spawnFormEl);
-        spawnFormEl.id = 'spawn-ship';
+        const dragTitle = document.createElement('p');
+        divTitle.appendChild(dragTitle);
+        dragTitle.textContent = 'Select a Ship and Drag it at the board';
 
-        const labelShip = document.createElement('label');
-        labelShip.setAttribute('for', 'ship-sizes');
-        labelShip.textContent = 'Ship Length';
-        spawnFormEl.appendChild(labelShip);
+        const changeOrientationBtn = document.createElement('button');
+        changeOrientationBtn.textContent = 'Flip Ships';
+        divTitle.appendChild(changeOrientationBtn);
 
-        const selectShip = document.createElement('select');
-        selectShip.id = 'ship-sizes';
-        selectShip.name = 'ship-sizes';
-        spawnFormEl.appendChild(selectShip);
+        const dragShipsDiv = document.createElement('div');
+        userInputSection.appendChild(dragShipsDiv);
+        dragShipsDiv.classList.add('draggableShips');
 
-        const labelRow = document.createElement('label');
-        labelRow.setAttribute('for', 'row');
-        labelRow.textContent = 'Row';
-        spawnFormEl.appendChild(labelRow);
+        changeOrientationBtn.addEventListener('click', () => {
+            vertical ? (vertical = false) : (vertical = true);
+            dragShipsDiv.replaceChildren();
+            spawnDragShips(vertical);
+            if (vertical) {
+                dragShipsDiv.style.setProperty('flex-direction', 'row');
+            } else {
+                dragShipsDiv.style.setProperty('flex-direction', 'column');
+            }
+        });
 
-        const inputRow = document.createElement('input');
-        inputRow.type = 'number';
-        inputRow.id = 'row';
-        inputRow.name = 'row';
-        inputRow.value = 0;
-        inputRow.min = 0;
-        inputRow.max = 9;
-        spawnFormEl.appendChild(inputRow);
+        function spawnDragShips(vertical) {
+            const sizeTwoOne = document.createElement('div');
+            sizeTwoOne.draggable = true;
+            sizeTwoOne.dataset.size = 2;
+            sizeTwoOne.classList.add('dragShip');
+            if (!vertical) {
+                sizeTwoOne.classList.add('horizontal');
+            }
+            sizeTwoOne.style = '--size: 2';
+            dragShipsDiv.appendChild(sizeTwoOne);
 
-        const labelCol = document.createElement('label');
-        labelCol.setAttribute('for', 'row');
-        labelCol.textContent = 'Column';
-        spawnFormEl.appendChild(labelCol);
+            const sizeTwoTwo = document.createElement('div');
+            sizeTwoTwo.draggable = true;
+            sizeTwoTwo.dataset.size = 2;
+            sizeTwoTwo.classList.add('dragShip');
+            if (!vertical) {
+                sizeTwoTwo.classList.add('horizontal');
+            }
+            sizeTwoTwo.style = '--size: 2';
+            dragShipsDiv.appendChild(sizeTwoTwo);
 
-        const inputCol = document.createElement('input');
-        inputCol.type = 'number';
-        inputCol.id = 'col';
-        inputCol.name = 'col';
-        inputCol.value = 0;
-        inputCol.min = 0;
-        inputCol.max = 9;
-        spawnFormEl.appendChild(inputCol);
+            const sizeThree = document.createElement('div');
+            sizeThree.draggable = true;
+            sizeThree.dataset.size = 3;
+            sizeThree.classList.add('dragShip');
+            if (!vertical) {
+                sizeThree.classList.add('horizontal');
+            }
+            sizeThree.style = '--size: 3';
+            dragShipsDiv.appendChild(sizeThree);
 
-        const spawnBtn = document.createElement('button');
-        spawnBtn.classList.add('spawn-btn');
-        spawnBtn.type = 'submit';
-        spawnBtn.textContent = 'Spawn';
-        spawnFormEl.appendChild(spawnBtn);
+            const sizeFour = document.createElement('div');
+            sizeFour.draggable = true;
+            sizeFour.dataset.size = 4;
+            sizeFour.classList.add('dragShip');
+            if (!vertical) {
+                sizeFour.classList.add('horizontal');
+            }
+            sizeFour.style = '--size: 4';
+            dragShipsDiv.appendChild(sizeFour);
+
+            const sizeFive = document.createElement('div');
+            sizeFive.draggable = true;
+            sizeFive.dataset.size = 5;
+            sizeFive.classList.add('dragShip');
+            if (!vertical) {
+                sizeFive.classList.add('horizontal');
+            }
+            sizeFive.style = '--size: 5';
+            dragShipsDiv.appendChild(sizeFive);
+        }
+        spawnDragShips(vertical);
     }
 
-    if (userInputSection.childElementCount === 0) {
-        createSpawnShips();
-        const selectShip = document.querySelector('#ship-sizes');
-        fillDropDown(selectShip);
-        const spawnForm = document.querySelector('#spawn-ship');
-        createSpawnFormListener(spawnForm);
-    }
-
-    function removeSpawnShips() {
-        userInputSection.replaceChildren();
-    }
-
-    // const formText = document.createElement('p');
-    // userInputSection.appendChild(formText);
-    // formText.textContent = 'Select Ship and spawn it at';
-
-    // const spawnFormEl = document.createElement('form');
-
-    // userInputSection.appendChild(spawnFormEl);
-    // spawnFormEl.id = 'spawn-ship';
-
-    // const labelShip = document.createElement('label');
-    // labelShip.setAttribute('for', 'ship-sizes');
-    // labelShip.textContent = 'Ship Length';
-    // spawnFormEl.appendChild(labelShip);
-
-    // const selectShip = document.createElement('select');
-    // selectShip.id = 'ship-sizes';
-    // selectShip.name = 'ship-sizes';
-    // spawnFormEl.appendChild(selectShip);
-
-    // const labelRow = document.createElement('label');
-    // labelRow.setAttribute('for', 'row');
-    // labelRow.textContent = 'Row';
-    // spawnFormEl.appendChild(labelRow);
-
-    // const inputRow = document.createElement('input');
-    // inputRow.type = 'number';
-    // inputRow.id = 'row';
-    // inputRow.name = 'row';
-    // spawnFormEl.appendChild(inputRow);
-
-    // const labelCol = document.createElement('label');
-    // labelCol.setAttribute('for', 'row');
-    // labelCol.textContent = 'Column';
-    // spawnFormEl.appendChild(labelCol);
-
-    // const inputCol = document.createElement('input');
-    // inputCol.type = 'number';
-    // inputCol.id = 'col';
-    // inputCol.name = 'col';
-    // spawnFormEl.appendChild(inputCol);
-
-    // const spawnBtn = document.createElement('button');
-    // spawnBtn.type = 'submit';
-    // spawnBtn.textContent = 'Spawn';
-    // spawnFormEl.appendChild(spawnBtn);
+    createSpawnShips();
 
     const randomSection = document.createElement('div');
     randomSection.classList.add('random-section');
@@ -177,20 +150,8 @@ export default function playerScreen(game, player, computer, ships) {
 
     const playerCells = document.querySelectorAll('#player-cell');
 
-    function fillDropDown(selectShip) {
-        selectShip.replaceChildren();
-
-        ships.forEach((ship) => {
-            const optionEl = document.createElement('option');
-            optionEl.value = ship;
-            optionEl.textContent = ship;
-            selectShip.appendChild(optionEl);
-        });
-    }
-
     randomizeBtn.addEventListener('click', () => {
         if (userInputSection.childElementCount > 0) {
-            removeSpawnShips();
             shipsDeployedSuccess();
         }
         ships = [5, 4, 3, 2, 2];
@@ -202,54 +163,12 @@ export default function playerScreen(game, player, computer, ships) {
         if (userInputSection.childElementCount <= 1) {
             shipsYetToBeDeployed();
             createSpawnShips();
-            const selectShip = document.querySelector('#ship-sizes');
-            fillDropDown(selectShip);
-            const spawnForm = document.querySelector('#spawn-ship');
-            createSpawnFormListener(spawnForm);
         }
-        const selectShip = document.querySelector('#ship-sizes');
 
         playerGameboard.reset();
         spawnShips(playerCells, board);
         ships = [5, 4, 3, 2, 2];
-        fillDropDown(selectShip);
     });
-
-    function createSpawnFormListener(spawnForm) {
-        spawnForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const row = Number(e.target.row.value);
-            const col = Number(e.target.col.value);
-            const selectedShip = Number(
-                document.querySelector('#ship-sizes').value
-            );
-
-            const index = ships.indexOf(selectedShip);
-
-            console.log(`spawningAt(${row},${col},${selectedShip})`);
-
-            const spawnAt = playerGameboard.spawnShipAt(
-                [row, col],
-                Ship(selectedShip)
-            );
-            console.log(spawnAt);
-
-            if (spawnAt) {
-                const selectShip = document.querySelector('#ship-sizes');
-
-                ships.splice(index, 1);
-                fillDropDown(selectShip);
-                spawnShips(playerCells, board);
-            }
-
-            if (ships.length === 0) {
-                if (userInputSection.childElementCount > 0) {
-                    removeSpawnShips();
-                }
-                shipsDeployedSuccess();
-            }
-        });
-    }
 
     function shipsDeployedSuccess() {
         userInputSection.replaceChildren();

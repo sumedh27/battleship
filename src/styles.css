@@ -130,12 +130,12 @@ input[type='number'] {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
     gap: 20px;
-    padding: 1.5rem;
+    padding: 1rem;
 }
 
 .player-select {
     display: grid;
-    grid-template-rows: auto minmax(150px, auto) auto auto;
+    grid-template-rows: auto 298.4px auto auto;
     gap: 25px;
 }
 
@@ -247,17 +247,25 @@ input[type='number'] {
     margin-right: 1rem;
 }
 
-#spawn-ship {
-    display: grid;
-    grid-template-columns: 15ch 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-    gap: 1ch;
+.user-title {
+    display: flex;
+    gap: 20px;
+}
+.draggableShips {
+    display: flex;
+    height: 100%;
+    gap: 20px;
 }
 
-select,
-input[type='number'] {
-    max-width: 5ch;
-    border-radius: 4px;
+.dragShip {
+    width: 38px;
+    height: calc(38px * var(--size));
+    background-color: var(--primary-500);
+}
+
+.dragShip.horizontal {
+    width: calc(38px * var(--size));
+    height: 38px;
 }
 
 .win-modal {
