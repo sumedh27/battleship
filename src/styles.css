@@ -260,7 +260,7 @@ input[type='number'] {
 .dragShip {
     width: 38px;
     height: calc(38px * var(--size));
-    background-color: var(--primary-500);
+    background-color: var(--primary-700);
 }
 
 .dragShip.horizontal {
