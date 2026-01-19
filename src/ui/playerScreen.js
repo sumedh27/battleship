@@ -24,6 +24,7 @@ export default function playerScreen(game, player, computer, ships) {
     boardContainer.classList.add('player-board-container');
 
     createGrid(boardContainer, 'player');
+    const playerCells = document.querySelectorAll('#player-cell');
 
     const playerSelectSection = document.createElement('section');
     playerSelectSection.classList.add('player-select');
@@ -154,6 +155,7 @@ export default function playerScreen(game, player, computer, ships) {
     function dragShipEvents() {
         const ships = document.querySelectorAll('.dragShip');
         let data = { ship: null, vertical: null };
+        let dragged = null;
 
         ships.forEach((ship) => {
             ship.addEventListener('dragstart', handleDragStart, { signal });
@@ -162,6 +164,7 @@ export default function playerScreen(game, player, computer, ships) {
 
         function handleDragStart(e) {
             console.log('dragging');
+            dragged = e.target;
             const size = Number(e.target.dataset.size);
             const axis = e.target.dataset.axis;
             data = { ship: Ship(size), axis };
@@ -170,6 +173,8 @@ export default function playerScreen(game, player, computer, ships) {
 
         function handleDragEnd(e) {
             data = { ship: null, axis: null };
+            console.log('stopped dragging');
+
             e.target.classList.remove('dragging');
         }
 
@@ -231,8 +236,6 @@ export default function playerScreen(game, player, computer, ships) {
                 const row = Number(e.target.dataset.row);
                 const col = Number(e.target.dataset.col);
 
-                console.log('leaving');
-
                 if (e.target.classList.contains('invalid-placement')) {
                     if (axis === 'vertical') {
                         for (let i = row; i < row + ship.size && i < 10; i++) {
@@ -275,6 +278,20 @@ export default function playerScreen(game, player, computer, ships) {
             }
         }
 
+        function handleDrop(e) {
+            e.preventDefault();
+            if (e.target.classList.contains('cell')) {
+                const { ship, axis } = data;
+                const row = Number(e.target.dataset.row);
+                const col = Number(e.target.dataset.col);
+                console.log([row, col], ship.size, axis);
+                playerGameboard.spawnShipAt([row, col], ship, axis);
+                spawnShips(playerCells, board);
+                dragged.parentNode.removeChild(dragged);
+                console.log('dropped');
+            }
+        }
+
         boardContainer.addEventListener('dragenter', handleDragEnter, {
             signal,
         });
@@ -282,6 +299,16 @@ export default function playerScreen(game, player, computer, ships) {
         boardContainer.addEventListener('dragleave', handleDragLeave, {
             signal,
         });
+
+        boardContainer.addEventListener(
+            'dragover',
+            (e) => {
+                e.preventDefault();
+            },
+            { signal }
+        );
+
+        boardContainer.addEventListener('drop', handleDrop, { signal });
     }
 
     const randomSection = document.createElement('div');
@@ -306,8 +333,6 @@ export default function playerScreen(game, player, computer, ships) {
     playerSelectSection.appendChild(startGameBtn);
     // const resetBtn = document.querySelector('.reset-btn');
     // const randomizeBtn = document.querySelector('.randomize-btn');
-
-    const playerCells = document.querySelectorAll('#player-cell');
 
     randomizeBtn.addEventListener('click', () => {
         if (userInputSection.childElementCount > 0) {
