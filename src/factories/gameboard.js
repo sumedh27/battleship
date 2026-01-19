@@ -24,6 +24,43 @@ export default function Gameboard() {
         return true;
     }
 
+    function canShipsSpawn(coords, ship, axis = 'horizontal') {
+        if (!ship || !ship.size) return false;
+        const [row, col] = coords;
+        if (row >= 10 || col >= 10) return false;
+        if (axis === 'horizontal') {
+            if (validHorizontal(row, col)) {
+                return true;
+            }
+            return false;
+        } else if (axis === 'vertical') {
+            if (validVertical(row, col)) {
+                return true;
+            }
+            return false;
+        }
+
+        function validHorizontal(row, col) {
+            for (let i = col; i < ship.size + col; i++) {
+                if (i >= board.length) return false;
+                if (typeof board[row][i] === 'object') return false;
+                if (!isAdjacentEmpty(row, i)) return false;
+            }
+            return true;
+        }
+
+        function validVertical(row, col) {
+            for (let i = row; i < ship.size + row; i++) {
+                if (i >= board.length) return false;
+                if (typeof board[i][col] === 'object') return false;
+                if (!isAdjacentEmpty(i, col)) return false;
+            }
+            return true;
+        }
+
+        return true;
+    }
+
     function spawnShipAt(coords, ship, axis = 'horizontal') {
         if (!ship || !ship.size) return false;
         const [row, col] = coords;
@@ -232,6 +269,7 @@ export default function Gameboard() {
 
     return {
         getBoard,
+        canShipsSpawn,
         spawnShipAt,
         placeShipAt,
         receiveAttack,

@@ -23,6 +23,8 @@ export default function playerScreen(game, player, computer, ships) {
     boardSection.appendChild(boardContainer);
     boardContainer.classList.add('player-board-container');
 
+    createGrid(boardContainer, 'player');
+
     const playerSelectSection = document.createElement('section');
     playerSelectSection.classList.add('player-select');
     main.appendChild(playerSelectSection);
@@ -82,12 +84,12 @@ export default function playerScreen(game, player, computer, ships) {
             const sizeTwoOne = document.createElement('div');
             sizeTwoOne.draggable = true;
             sizeTwoOne.dataset.size = 2;
-            sizeTwoOne.dataset.vertical = true;
+            sizeTwoOne.dataset.axis = 'vertical';
 
             sizeTwoOne.classList.add('dragShip');
             if (!vertical) {
                 sizeTwoOne.classList.add('horizontal');
-                sizeTwoOne.dataset.vertical = false;
+                sizeTwoOne.dataset.axis = 'horizontal';
             }
             sizeTwoOne.style = '--size: 2';
             dragShipsDiv.appendChild(sizeTwoOne);
@@ -95,12 +97,12 @@ export default function playerScreen(game, player, computer, ships) {
             const sizeTwoTwo = document.createElement('div');
             sizeTwoTwo.draggable = true;
             sizeTwoTwo.dataset.size = 2;
-            sizeTwoTwo.dataset.vertical = true;
+            sizeTwoTwo.dataset.axis = 'vertical';
 
             sizeTwoTwo.classList.add('dragShip');
             if (!vertical) {
                 sizeTwoTwo.classList.add('horizontal');
-                sizeTwoTwo.dataset.vertical = false;
+                sizeTwoTwo.dataset.axis = 'horizontal';
             }
             sizeTwoTwo.style = '--size: 2';
             dragShipsDiv.appendChild(sizeTwoTwo);
@@ -108,12 +110,12 @@ export default function playerScreen(game, player, computer, ships) {
             const sizeThree = document.createElement('div');
             sizeThree.draggable = true;
             sizeThree.dataset.size = 3;
-            sizeThree.dataset.vertical = true;
+            sizeThree.dataset.axis = 'vertical';
 
             sizeThree.classList.add('dragShip');
             if (!vertical) {
                 sizeThree.classList.add('horizontal');
-                sizeThree.dataset.vertical = false;
+                sizeThree.dataset.axis = 'horizontal';
             }
             sizeThree.style = '--size: 3';
             dragShipsDiv.appendChild(sizeThree);
@@ -121,11 +123,11 @@ export default function playerScreen(game, player, computer, ships) {
             const sizeFour = document.createElement('div');
             sizeFour.draggable = true;
             sizeFour.dataset.size = 4;
-            sizeFour.dataset.vertical = true;
+            sizeFour.dataset.axis = 'vertical';
             sizeFour.classList.add('dragShip');
             if (!vertical) {
                 sizeFour.classList.add('horizontal');
-                sizeFour.dataset.vertical = false;
+                sizeFour.dataset.axis = 'horizontal';
             }
             sizeFour.style = '--size: 4';
             dragShipsDiv.appendChild(sizeFour);
@@ -133,12 +135,12 @@ export default function playerScreen(game, player, computer, ships) {
             const sizeFive = document.createElement('div');
             sizeFive.draggable = true;
             sizeFive.dataset.size = 5;
-            sizeFive.dataset.vertical = true;
+            sizeFive.dataset.axis = 'vertical';
 
             sizeFive.classList.add('dragShip');
             if (!vertical) {
                 sizeFive.classList.add('horizontal');
-                sizeFive.dataset.vertical = false;
+                sizeFive.dataset.axis = 'horizontal';
             }
             sizeFive.style = '--size: 5';
             dragShipsDiv.appendChild(sizeFive);
@@ -151,7 +153,7 @@ export default function playerScreen(game, player, computer, ships) {
 
     function dragShipEvents() {
         const ships = document.querySelectorAll('.dragShip');
-        let data = { size: null, vertical: null };
+        let data = { ship: null, vertical: null };
 
         ships.forEach((ship) => {
             ship.addEventListener('dragstart', handleDragStart, { signal });
@@ -160,24 +162,124 @@ export default function playerScreen(game, player, computer, ships) {
 
         function handleDragStart(e) {
             console.log('dragging');
-            const size = e.target.dataset.size;
-            const vertical = e.target.dataset.vertical;
-            console.log(size);
-            data = { size, vertical };
-            console.log(data);
+            const size = Number(e.target.dataset.size);
+            const axis = e.target.dataset.axis;
+            data = { ship: Ship(size), axis };
             e.target.classList.add('dragging');
         }
 
         function handleDragEnd(e) {
-            data = { size: null, vertical: null };
+            data = { ship: null, axis: null };
             e.target.classList.remove('dragging');
         }
 
         function handleDragEnter(e) {
             e.stopPropagation();
-            console.log(data.size, data.vertical);
+            const { ship, axis } = data;
+            if (e.target.classList.contains('cell')) {
+                const row = Number(e.target.dataset.row);
+                const col = Number(e.target.dataset.col);
+                const spawnAble = playerGameboard.canShipsSpawn(
+                    [row, col],
+                    ship,
+                    axis
+                );
+                if (axis === 'vertical' && spawnAble) {
+                    for (let i = row; i < row + ship.size; i++) {
+                        const div = document.querySelector(
+                            `[data-row='${i}'][data-col='${col}']`
+                        );
+                        setTimeout(() => {
+                            div.classList.add('valid-placement');
+                        }, 1);
+                    }
+                } else if (axis === 'horizontal' && spawnAble) {
+                    for (let i = col; i < col + ship.size; i++) {
+                        const div = document.querySelector(
+                            `[data-row='${row}'][data-col='${i}']`
+                        );
+                        setTimeout(() => {
+                            div.classList.add('valid-placement');
+                        }, 1);
+                    }
+                } else if (axis === 'vertical' && !spawnAble) {
+                    for (let i = row; i < row + ship.size && i < 10; i++) {
+                        const div = document.querySelector(
+                            `[data-row='${i}'][data-col='${col}']`
+                        );
+                        setTimeout(() => {
+                            div.classList.add('invalid-placement');
+                        }, 1);
+                    }
+                } else if (axis === 'horizontal' && !spawnAble) {
+                    for (let i = col; i < col + ship.size && i < 10; i++) {
+                        const div = document.querySelector(
+                            `[data-row='${row}'][data-col='${i}']`
+                        );
+                        setTimeout(() => {
+                            div.classList.add('invalid-placement');
+                        }, 1);
+                    }
+                }
+            }
         }
+
+        function handleDragLeave(e) {
+            e.stopPropagation();
+            const { ship, axis } = data;
+            if (e.target.classList.contains('cell')) {
+                const row = Number(e.target.dataset.row);
+                const col = Number(e.target.dataset.col);
+
+                console.log('leaving');
+
+                if (e.target.classList.contains('invalid-placement')) {
+                    if (axis === 'vertical') {
+                        for (let i = row; i < row + ship.size && i < 10; i++) {
+                            const div = document.querySelector(
+                                `[data-row='${i}'][data-col='${col}']`
+                            );
+
+                            div.classList.remove('invalid-placement');
+                        }
+                    } else if (axis === 'horizontal') {
+                        for (let i = col; i < col + ship.size && i < 10; i++) {
+                            const div = document.querySelector(
+                                `[data-row='${row}'][data-col='${i}']`
+                            );
+
+                            div.classList.remove('invalid-placement');
+                        }
+                    }
+
+                    return;
+                }
+
+                if (axis === 'vertical') {
+                    for (let i = row; i < row + ship.size; i++) {
+                        const div = document.querySelector(
+                            `[data-row='${i}'][data-col='${col}']`
+                        );
+
+                        div.classList.remove('valid-placement');
+                    }
+                } else if (axis === 'horizontal') {
+                    for (let i = col; i < col + ship.size; i++) {
+                        const div = document.querySelector(
+                            `[data-row='${row}'][data-col='${i}']`
+                        );
+
+                        div.classList.remove('valid-placement');
+                    }
+                }
+            }
+        }
+
         boardContainer.addEventListener('dragenter', handleDragEnter, {
+            signal,
+        });
+
+        boardContainer.addEventListener('dragleave', handleDragLeave, {
             signal,
         });
     }
@@ -204,8 +306,6 @@ export default function playerScreen(game, player, computer, ships) {
     playerSelectSection.appendChild(startGameBtn);
     // const resetBtn = document.querySelector('.reset-btn');
     // const randomizeBtn = document.querySelector('.randomize-btn');
-
-    createGrid(boardContainer, 'player');
 
     const playerCells = document.querySelectorAll('#player-cell');
 
