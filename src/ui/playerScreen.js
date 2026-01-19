@@ -6,6 +6,15 @@ import spawnShips from './helpers/spawnShips';
 export default function playerScreen(game, player, computer, ships) {
     let controller = new AbortController();
     let { signal } = controller;
+    const playerShips = new Map();
+
+    function createPlayerObj(ships) {
+        for (let i = 0; i < ships.length; i++) {
+            playerShips.set(i, Ship(ships[i]));
+        }
+    }
+
+    createPlayerObj(ships);
 
     const playerGameboard = player.gameboard;
     const board = playerGameboard.getBoard();
@@ -82,69 +91,84 @@ export default function playerScreen(game, player, computer, ships) {
         });
 
         function spawnDragShips(vertical) {
-            const sizeTwoOne = document.createElement('div');
-            sizeTwoOne.draggable = true;
-            sizeTwoOne.dataset.size = 2;
-            sizeTwoOne.dataset.axis = 'vertical';
-
-            sizeTwoOne.classList.add('dragShip');
-            if (!vertical) {
-                sizeTwoOne.classList.add('horizontal');
-                sizeTwoOne.dataset.axis = 'horizontal';
+            for (let [key, ship] of playerShips) {
+                const div = document.createElement('div');
+                div.draggable = true;
+                div.dataset.key = key;
+                div.dataset.size = ship.size;
+                div.dataset.axis = 'vertical';
+                div.classList.add('dragShip');
+                if (!vertical) {
+                    div.classList.add('horizontal');
+                    div.dataset.axis = 'horizontal';
+                }
+                div.style = `--size: ${ship.size}`;
+                dragShipsDiv.appendChild(div);
             }
-            sizeTwoOne.style = '--size: 2';
-            dragShipsDiv.appendChild(sizeTwoOne);
 
-            const sizeTwoTwo = document.createElement('div');
-            sizeTwoTwo.draggable = true;
-            sizeTwoTwo.dataset.size = 2;
-            sizeTwoTwo.dataset.axis = 'vertical';
+            // const sizeTwoOne = document.createElement('div');
+            // sizeTwoOne.draggable = true;
+            // sizeTwoOne.dataset.size = 2;
+            // sizeTwoOne.dataset.axis = 'vertical';
 
-            sizeTwoTwo.classList.add('dragShip');
-            if (!vertical) {
-                sizeTwoTwo.classList.add('horizontal');
-                sizeTwoTwo.dataset.axis = 'horizontal';
-            }
-            sizeTwoTwo.style = '--size: 2';
-            dragShipsDiv.appendChild(sizeTwoTwo);
+            // sizeTwoOne.classList.add('dragShip');
+            // if (!vertical) {
+            //     sizeTwoOne.classList.add('horizontal');
+            //     sizeTwoOne.dataset.axis = 'horizontal';
+            // }
+            // sizeTwoOne.style = '--size: 2';
+            // dragShipsDiv.appendChild(sizeTwoOne);
 
-            const sizeThree = document.createElement('div');
-            sizeThree.draggable = true;
-            sizeThree.dataset.size = 3;
-            sizeThree.dataset.axis = 'vertical';
+            // const sizeTwoTwo = document.createElement('div');
+            // sizeTwoTwo.draggable = true;
+            // sizeTwoTwo.dataset.size = 2;
+            // sizeTwoTwo.dataset.axis = 'vertical';
 
-            sizeThree.classList.add('dragShip');
-            if (!vertical) {
-                sizeThree.classList.add('horizontal');
-                sizeThree.dataset.axis = 'horizontal';
-            }
-            sizeThree.style = '--size: 3';
-            dragShipsDiv.appendChild(sizeThree);
+            // sizeTwoTwo.classList.add('dragShip');
+            // if (!vertical) {
+            //     sizeTwoTwo.classList.add('horizontal');
+            //     sizeTwoTwo.dataset.axis = 'horizontal';
+            // }
+            // sizeTwoTwo.style = '--size: 2';
+            // dragShipsDiv.appendChild(sizeTwoTwo);
 
-            const sizeFour = document.createElement('div');
-            sizeFour.draggable = true;
-            sizeFour.dataset.size = 4;
-            sizeFour.dataset.axis = 'vertical';
-            sizeFour.classList.add('dragShip');
-            if (!vertical) {
-                sizeFour.classList.add('horizontal');
-                sizeFour.dataset.axis = 'horizontal';
-            }
-            sizeFour.style = '--size: 4';
-            dragShipsDiv.appendChild(sizeFour);
+            // const sizeThree = document.createElement('div');
+            // sizeThree.draggable = true;
+            // sizeThree.dataset.size = 3;
+            // sizeThree.dataset.axis = 'vertical';
 
-            const sizeFive = document.createElement('div');
-            sizeFive.draggable = true;
-            sizeFive.dataset.size = 5;
-            sizeFive.dataset.axis = 'vertical';
+            // sizeThree.classList.add('dragShip');
+            // if (!vertical) {
+            //     sizeThree.classList.add('horizontal');
+            //     sizeThree.dataset.axis = 'horizontal';
+            // }
+            // sizeThree.style = '--size: 3';
+            // dragShipsDiv.appendChild(sizeThree);
 
-            sizeFive.classList.add('dragShip');
-            if (!vertical) {
-                sizeFive.classList.add('horizontal');
-                sizeFive.dataset.axis = 'horizontal';
-            }
-            sizeFive.style = '--size: 5';
-            dragShipsDiv.appendChild(sizeFive);
+            // const sizeFour = document.createElement('div');
+            // sizeFour.draggable = true;
+            // sizeFour.dataset.size = 4;
+            // sizeFour.dataset.axis = 'vertical';
+            // sizeFour.classList.add('dragShip');
+            // if (!vertical) {
+            //     sizeFour.classList.add('horizontal');
+            //     sizeFour.dataset.axis = 'horizontal';
+            // }
+            // sizeFour.style = '--size: 4';
+            // dragShipsDiv.appendChild(sizeFour);
+
+            // const sizeFive = document.createElement('div');
+            // sizeFive.draggable = true;
+            // sizeFive.dataset.size = 5;
+            // sizeFive.dataset.axis = 'vertical';
+
+            // sizeFive.classList.add('dragShip');
+            // if (!vertical) {
+            //     sizeFive.classList.add('horizontal');
+            //     sizeFive.dataset.axis = 'horizontal';
+            // }
+            // sizeFive.style = '--size: 5';
+            // dragShipsDiv.appendChild(sizeFive);
         }
         spawnDragShips(vertical);
         dragShipEvents();
@@ -153,17 +177,16 @@ export default function playerScreen(game, player, computer, ships) {
     createSpawnShips();
 
     function dragShipEvents() {
-        const ships = document.querySelectorAll('.dragShip');
+        const dragShips = document.querySelectorAll('.dragShip');
         let data = { ship: null, vertical: null };
         let dragged = null;
 
-        ships.forEach((ship) => {
+        dragShips.forEach((ship) => {
             ship.addEventListener('dragstart', handleDragStart, { signal });
             ship.addEventListener('dragend', handleDragEnd, { signal });
         });
 
         function handleDragStart(e) {
-            console.log('dragging');
             dragged = e.target;
             const size = Number(e.target.dataset.size);
             const axis = e.target.dataset.axis;
@@ -173,7 +196,6 @@ export default function playerScreen(game, player, computer, ships) {
 
         function handleDragEnd(e) {
             data = { ship: null, axis: null };
-            console.log('stopped dragging');
 
             e.target.classList.remove('dragging');
         }
@@ -284,11 +306,17 @@ export default function playerScreen(game, player, computer, ships) {
                 const { ship, axis } = data;
                 const row = Number(e.target.dataset.row);
                 const col = Number(e.target.dataset.col);
-                console.log([row, col], ship.size, axis);
+                const key = Number(dragged.dataset.key);
                 playerGameboard.spawnShipAt([row, col], ship, axis);
                 spawnShips(playerCells, board);
-                dragged.parentNode.removeChild(dragged);
-                console.log('dropped');
+                if (ship.getCoords().coords !== null) {
+                    dragged.parentNode.removeChild(dragged);
+                    playerShips.delete(key);
+                }
+
+                if (playerShips.size === 0) {
+                    shipsDeployedSuccess();
+                }
             }
         }
 
@@ -344,14 +372,15 @@ export default function playerScreen(game, player, computer, ships) {
     });
 
     resetBtn.addEventListener('click', () => {
-        if (userInputSection.childElementCount <= 1) {
+        ships = [5, 4, 3, 2, 2];
+        createPlayerObj(ships);
+        if (userInputSection.childElementCount <= 2) {
             shipsYetToBeDeployed();
             createSpawnShips();
         }
 
         playerGameboard.reset();
         spawnShips(playerCells, board);
-        ships = [5, 4, 3, 2, 2];
     });
 
     function shipsDeployedSuccess() {
