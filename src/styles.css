@@ -323,6 +323,11 @@ footer {
         border-width: 4px;
     }
 
+    .player-select {
+        grid-template-rows: auto auto auto;
+        justify-items: center;
+    }
+
     .turn-indicator {
         grid-column: 1/4;
         grid-row: 2/3;
@@ -332,6 +337,9 @@ footer {
 
     .restart-btn {
         padding: 0.7rem;
+    }
+    .user-inputs {
+        display: none;
     }
 }
 
@@ -367,6 +375,7 @@ footer {
         grid-template-columns: 1fr;
         grid-template-rows: 1fr 1fr;
         padding: 0.5rem;
+        align-items: start;
     }
 
     .player-board-container,
@@ -382,6 +391,7 @@ footer {
     }
 
     .player-select {
+        grid-template-rows: auto auto auto;
         justify-items: center;
     }
 
